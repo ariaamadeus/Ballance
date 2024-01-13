@@ -11,7 +11,7 @@ class PID{
     void set_target(float t);
     void set_mode(int m);
     
-    float calculate(float input);
+    float calculate(int feedback);
 
   private:
     //somehow constant

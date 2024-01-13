@@ -7,9 +7,9 @@ PID::PID(float Kp, float Ki, float Kd){
   KD = Kd;
 }
   
-float PID::calculate(float feedback){
+float PID::calculate(int feedback){
   // Pre-calculation
-  error = target - feedback;
+  error = target - float(feedback);
   //error_sum += error;
   
   // Calculation

@@ -2,15 +2,31 @@
 #include <Adafruit_VL53L0X.h>
 #include "PID.h"
 
-//Stepper
 #define stepPin 6
 #define dirPin 5
 #define enaPin 4
+//#define echoPin A4 //SDA
+//#define trigPin A5 //SCL
 
 //Classes
 AccelStepper stepper(AccelStepper::DRIVER, stepPin, dirPin); // use functions to step
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X(); //Time of Flight, distance sensor
-PID pid(0.5, 0.0001, 0); //Kp,Ki,Kd
+PID pid(2, 0.000001, 2); //Kp,Ki,Kd
+
+//Variables
+int dist;
+long duration;
+
+//Functions
+//float ultrasonic_read() {
+//  digitalWrite(trigPin, LOW);
+//  delayMicroseconds(2);
+//  digitalWrite(trigPin, HIGH);
+//  delayMicroseconds(10);
+//  digitalWrite(trigPin, LOW);
+//  duration = pulseIn(echoPin, HIGH);
+//  return duration * 0.034 / 2;
+//}
 
 void setup() {
   Serial.begin(9600);
@@ -21,21 +37,20 @@ void setup() {
   }
   ToF.startRangeContinuous();
 
+  //  pinMode(trigPin, OUTPUT);
+  //  pinMode(echoPin, INPUT);
+
   stepper.setMaxSpeed(1000);
   stepper.setAcceleration(3200);
 
   pid.set_mode(1);//0: step, 1: time
-  pid.set_target(120);
+  pid.set_target(230);
 }
 
 void loop() {
-  //  stepper.runToNewPosition(pid.calculate(ToF.readRange()));
-  int dist = ToF.readRange();
-  if (dist < 500) {
-    float thespeed = pid.calculate(dist);
-//    stepper.setSpeed(thespeed);
-    stepper.runToNewPosition(thespeed);
-    Serial.println(thespeed);
-//    stepper.runSpeed();
-  }
+  dist = ToF.readRange();
+  //  dist = ;
+  if (dist < 500) stepper.runToNewPosition(pid.calculate(dist));
+  //  stepper.runToNewPosition(pid.calculate(ultrasonic_read()));
+  Serial.println(dist);
 }

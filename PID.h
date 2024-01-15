@@ -9,7 +9,7 @@ class PID{
     PID(float Kp, float Ki, float Kd);
 
     void set_target(float t);
-    void set_mode(int m);
+    void set_mode(int m); //0: step, 1: time
     
     float calculate(int feedback);
 

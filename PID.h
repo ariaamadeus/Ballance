@@ -10,6 +10,7 @@ class PID{
 
     void set_target(float t);
     void set_mode(int m); //0: step, 1: time
+    void set_min_max(int minmax); //+max and -min
     
     float calculate(int feedback); // default mode: time
 
@@ -17,6 +18,7 @@ class PID{
     //somehow constant
     float KP = 1, KI = 1, KD = 1;
     int mode = 0; //0: step, 1: time
+    int max_point = 10000;
     float target = 0;
 
     //counter

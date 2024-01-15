@@ -10,7 +10,7 @@
 
 //Classes
 AccelStepper stepper(AccelStepper::DRIVER, stepPin, dirPin); // use functions to step
-Adafruit_VL53L0X ToF = Adafruit_VL53L0X(); //Time of Flight, distance sensor
+Adafruit_VL53L0X ToF; //Time of Flight, distance sensor
 PID pid(2, 0.01, 2); //Kp,Ki,Kd
 
 //Variables
@@ -32,7 +32,7 @@ void setup() {
   Serial.begin(9600);
 
   while (!ToF.begin()) {
-    Serial.println(F("Failed to boot VL53L0X"));
+    Serial.println(F("Retrying to boot VL53L0X..."));
     delay(1000);
   }
   ToF.startRangeContinuous();
@@ -40,11 +40,12 @@ void setup() {
   //  pinMode(trigPin, OUTPUT);
   //  pinMode(echoPin, INPUT);
 
-  stepper.setMaxSpeed(1000);
-  stepper.setAcceleration(3200);
+  stepper.setMaxSpeed(6400);
+  stepper.setAcceleration(6400);
 
   pid.set_mode(1);//0: step, 1: time
   pid.set_target(230);
+  pid.set_max(500); //max stepper
 }
 
 void loop() {

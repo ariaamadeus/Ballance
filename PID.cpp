@@ -31,6 +31,7 @@ float PID::calculate(int feedback){
 
   // Post-calculation
   last_error = error;
+  if (output > max_point) output = float(max);
   return output;
 }
 
@@ -48,4 +49,8 @@ void PID::set_mode(int m){
   //set all the counter back to start when the mode changed
   step_count = 1;
   time_flag = millis();
+}
+
+void PID::set_max(int max){
+  max_point = max;
 }

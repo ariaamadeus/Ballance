@@ -11,7 +11,7 @@ class PID{
     void set_target(float t);
     void set_mode(int m); //0: step, 1: time
     
-    float calculate(int feedback);
+    float calculate(int feedback); // default mode: time
 
   private:
     //somehow constant
@@ -21,13 +21,14 @@ class PID{
 
     //counter
     float step_count = 1;
-    unsigned long time_count = 0;
+    unsigned long time_flag = 0;
 
     //output things
     float output = 0;
     
     float error = 0;
     float last_error = 0;
+    float error_sum = 0;
 };
 
 #endif //PID_H

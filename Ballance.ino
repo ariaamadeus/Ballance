@@ -11,7 +11,7 @@
 //Classes
 AccelStepper stepper(AccelStepper::DRIVER, stepPin, dirPin); // use functions to step
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X(); //Time of Flight, distance sensor
-PID pid(2, 0.000001, 2); //Kp,Ki,Kd
+PID pid(2, 0.01, 2); //Kp,Ki,Kd
 
 //Variables
 int dist;
@@ -49,8 +49,5 @@ void setup() {
 
 void loop() {
   dist = ToF.readRange();
-  //  dist = ;
   if (dist < 500) stepper.runToNewPosition(pid.calculate(dist));
-  //  stepper.runToNewPosition(pid.calculate(ultrasonic_read()));
-  Serial.println(dist);
 }

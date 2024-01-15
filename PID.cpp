@@ -10,20 +10,22 @@ PID::PID(float Kp, float Ki, float Kd){
 float PID::calculate(int feedback){
   // Pre-calculation
   error = target - float(feedback);
-  //error_sum += error;
+  
   
   // Calculation
   switch(mode){
     case 0: // step
-      output = (KP * error) + (KI *  error*step_count) + (KD * (error-last_error)/step_count);
+      error_sum += error*step_count;
+      output = (KP * error) + (KI * error_sum) + (KD * (error-last_error)/step_count);
       step_count++; // Post-calculation
       break;
     case 1: // time
-      output = (KP * error) + (KI *  error*(millis()-time_count)) + (KD * (error-last_error)/(millis()-time_count));
+      error_sum += error*(millis()-time_flag);
+      output = (KP * error) + (KI * error_sum) + (KD * (error-last_error)/(millis()-time_flag));
       break;
-    default:
-      output = (KP * error) + (KI *  error*step_count) + (KD * (error-last_error)/step_count);
-      step_count++; // Post-calculation
+    default: // time
+      error_sum += error*(millis()-time_flag);
+      output = (KP * error) + (KI * error_sum) + (KD * (error-last_error)/(millis()-time_flag));
       break;
   }
 
@@ -37,7 +39,7 @@ void PID::set_target(float t){
 
   //set all the counter back to start when the target changed
   step_count = 1;
-  time_count = millis();
+  time_flag = millis();
 }
 
 void PID::set_mode(int m){
@@ -45,5 +47,5 @@ void PID::set_mode(int m){
   
   //set all the counter back to start when the mode changed
   step_count = 1;
-  time_count = millis();
+  time_flag = millis();
 }

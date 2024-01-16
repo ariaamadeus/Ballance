@@ -1,41 +1,44 @@
 #include "Arduino.h"
 #include "PID.h"
 
-PID::PID(float Kp, float Ki, float Kd){
+PID::PID(float Kp, float Ki, float Kd) {
   KP = Kp;
   KI = Ki;
   KD = Kd;
 }
-  
-float PID::calculate(int feedback){
+
+float PID::calculate(int feedback) {
   // Pre-calculation
   error = target - float(feedback);
-  
-  
+
+
   // Calculation
-  switch(mode){
+  switch (mode) {
     case 0: // step
-      error_sum += error*step_count;
-      output = (KP * error) + (KI * error_sum) + (KD * (error-last_error)/step_count);
+      error_sum += error * step_count;
+      output = (KP * error) + (KI * error_sum) + (KD * (error - last_error) / step_count);
       step_count++; // Post-calculation
       break;
     case 1: // time
-      error_sum += error*(millis()-time_flag);
-      output = (KP * error) + (KI * error_sum) + (KD * (error-last_error)/(millis()-time_flag));
+      error_sum += error * (millis() - time_flag);
+      //      output = (KP * error) + (KI * error_sum) + (KD * (error-last_error)/(millis()-time_flag));
+      output = (KP * error) + (KI * error_sum) + (KD * (error - last_error));
       break;
     default: // time
-      error_sum += error*(millis()-time_flag);
-      output = (KP * error) + (KI * error_sum) + (KD * (error-last_error)/(millis()-time_flag));
+      error_sum += error * (millis() - time_flag);
+      //      output = (KP * error) + (KI * error_sum) + (KD * (error-last_error)/(millis()-time_flag));
+      output = (KP * error) + (KI * error_sum) + (KD * (error - last_error));
       break;
   }
 
   // Post-calculation
   last_error = error;
-  if (output > max_point) output = float(max);
+  if (output > max_point) output = float(max_point);
+  else if (output < (-1)*max_point) output = (-1) * float(max_point);
   return output;
 }
 
-void PID::set_target(float t){
+void PID::set_target(float t) {
   target = t;
 
   //set all the counter back to start when the target changed
@@ -43,14 +46,14 @@ void PID::set_target(float t){
   time_flag = millis();
 }
 
-void PID::set_mode(int m){
+void PID::set_mode(int m) {
   mode = m;
-  
+
   //set all the counter back to start when the mode changed
   step_count = 1;
   time_flag = millis();
 }
 
-void PID::set_max(int max){
-  max_point = max;
+void PID::set_max(int themax) {
+  max_point = themax;
 }

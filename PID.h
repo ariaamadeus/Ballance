@@ -10,7 +10,7 @@ class PID{
 
     void set_target(float t);
     void set_mode(int m); //0: step, 1: time
-    void set_min_max(int minmax); //+max and -min
+    void set_max(int themax); //+max and -min
     
     float calculate(int feedback); // default mode: time
 
